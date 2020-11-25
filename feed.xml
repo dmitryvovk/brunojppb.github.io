@@ -1,0 +1,1084 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://bpaulino.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://bpaulino.com/" rel="alternate" type="text/html" /><updated>2020-11-25T09:10:03+00:00</updated><id>https://bpaulino.com/feed.xml</id><title type="html">bpaulino.com</title><subtitle>I am Bruno Paulino. Software is my craft.</subtitle><author><name>Bruno Paulino</name></author><entry><title type="html">DevOps and its impact on Developer Productivity</title><link href="https://bpaulino.com/entries/devops-and-its-impact-on-developer-productivity" rel="alternate" type="text/html" title="DevOps and its impact on Developer Productivity" /><published>2020-11-22T00:00:00+00:00</published><updated>2020-11-22T00:00:00+00:00</updated><id>https://bpaulino.com/entries/devops-and-its-impact-in-developer-productivity</id><content type="html" xml:base="https://bpaulino.com/entries/devops-and-its-impact-on-developer-productivity">&lt;p&gt;I have recently finished reading &lt;a href=&quot;https://www.goodreads.com/book/show/35747076&quot;&gt;Accelerate: building and Scaling High Performing Technology Organizations&lt;/a&gt; to get a more in-depth view into the DevOps landscape and its influence in developer productivity. The book is based on solid research conducted by &lt;a href=&quot;https://twitter.com/nicolefv&quot;&gt;Dr. Nicole Forsgren&lt;/a&gt;, &lt;a href=&quot;https://twitter.com/jezhumble&quot;&gt;Jez Humble&lt;/a&gt; and &lt;a href=&quot;https://twitter.com/RealGeneKim&quot;&gt;Gene Kim.&lt;/a&gt; The book is an eye-opener for the importance of software delivery performance and the value it brings to any organization that takes it seriously.&lt;/p&gt;
+
+&lt;p&gt;This book made me reflect on my experience with DevOps, my own productivity and the productivity of my team. I don’t want to quote every topic mentioned in the book here, but I absolutely recommend you to give it a read. My focus is actually to explore how it relates to my journey adopting DevOps along my career and the benefits it brings.&lt;/p&gt;
+
+&lt;h2 id=&quot;shipping-code-to-production-and-developer-confidence&quot;&gt;Shipping code to production and developer confidence&lt;/h2&gt;
+
+&lt;p&gt;When I started my career, I worked at a company where the deployment process was done by a magician developer that held all the powers. Nobody was allowed to deploy code unless this wizard could cast his spells. The second problem we had was that all engineers knew how to run the application on their local machines but once the rubber hits the road, nobody had a clue about setting up dependencies and building the application for production.&lt;/p&gt;
+
+&lt;p&gt;That was a terrible workflow to work with and once during a lucky day, I had no choice but to perform a production deployment by myself. I was feeling scared just thinking about what could go wrong. Having this deployment workflow was a huge blow on the confidence of the engineers in my team, including myself, where not only nobody wanted to be responsible for it, but also not a single person wanted to get involved with it.&lt;/p&gt;
+
+&lt;p&gt;Over the years, I started to learn about DevOps and incrementally adopted it wherever I go so I could avoid the bad experience I had in the past. Since then, I have been reaping the benefits of it over and over again. The productivity gain was immense.&lt;/p&gt;
+
+&lt;h2 id=&quot;starting-with-continuous-integration&quot;&gt;Starting with Continuous Integration&lt;/h2&gt;
+
+&lt;p&gt;To start things off, you want to make your deployment process as predictable and as reproducible as possible. Which means that you have to make sure the work done by a developer can be built, tested and deployed to a safe environment, only then it can be shipped to production. This is called Continuous Integration (CI). Once you define and validate your integration steps for your application stack, be it Java, Node.js or even mobile apps, you must reproduce those steps in code using version control, better yet if you can make this a part of your application repository. As an example, those steps could look like this:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Code is committed by an engineer in a feature branch&lt;/li&gt;
+  &lt;li&gt;A build of the application is triggered. This build is technically production-grade, which means that it has minimal or no difference between development and production, mainly configuration differences (e.g. a sandbox payment gateway where fake payments can be issued), preferably configured via environment variables&lt;/li&gt;
+  &lt;li&gt;A suite of automated tests will be executed on this build&lt;/li&gt;
+  &lt;li&gt;Once all tests pass, the code can be reviewed and merged to the production branch (commonly known as main)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The steps above can be performed by any developer in the team. Once you have a continuous integration pipeline in place, the engineers don’t even have to think about it much since they can be triggered automatically by a continuous integration service like &lt;a href=&quot;https://github.com/features/actions&quot;&gt;Github Actions&lt;/a&gt; or &lt;a href=&quot;https://docs.gitlab.com/ee/ci/&quot;&gt;Gitlab CI.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Once you have this process in place, you will have robustness built-in on your development workflow, which will inevitably lead to more confidence with your code, ultimately leading to more productivity.&lt;/p&gt;
+
+&lt;h2 id=&quot;nail-it-down-with-continuous-deployment&quot;&gt;Nail it down with Continuous Deployment&lt;/h2&gt;
+
+&lt;p&gt;What if I told you that once code is reviewed and merged to your production branch, this code could be automatically released to production with minimal or no impact to your users? Yes, that is possible. This is called Continuous Deployment (CD). The same thought process applied to continuous integration can be transferred to your deployment workflow, where automated pipelines will make sure your code is pushed to your servers clusters.&lt;/p&gt;
+
+&lt;p&gt;Here you can apply the same constraints as before: You want to make sure that every deployment is predictable and reproducible. Any failed steps should leave traces (logs, error messages/code) for further inspection and debug. Here is an example on how it could work for a backend application deployed in a multi-node architecture.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Code is merged into the production branch (Build and tests were previously executed, so the confidence level here is already very high)&lt;/li&gt;
+  &lt;li&gt;Traffic is diverted to specific nodes in your cluster, inactive nodes are updated with the new version of your build. This step is done incrementally for every node, which will result in a &lt;a href=&quot;https://spring.io/blog/2016/05/31/zero-downtime-deployment-with-a-database&quot;&gt;zero downtime deployment (or blue/green deployment)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Notification is sent to your team about the newly deployed version. Could be as simple as an email or more sophisticated integrations with your internal chat of choice. (e.g. &lt;a href=&quot;https://slack.com/intl/en-at/&quot;&gt;Slack&lt;/a&gt;, &lt;a href=&quot;https://mattermost.com&quot;&gt;Matterost&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Once again, all the steps mentioned above can be executed automatically, with zero manual intervention. Of course, you won’t probably have the full confidence to do it right away, which is totally understandable. But you can start with small steps by automating the process in code and triggering them manually in the beginning. Once the confidence is high enough, this step can be performed automatically for every new code merged.&lt;/p&gt;
+
+&lt;p&gt;Once you enable anyone in your team to perform a deployment with confidence, the productivity of your peers will be noticeably better. As a result, you will be delivering value to your customers much faster, most probably much faster than other companies that don’t adopt such practices, which will give an edge on the competition.&lt;/p&gt;
+
+&lt;h2 id=&quot;where-to-go-from-here&quot;&gt;Where to go from here&lt;/h2&gt;
+
+&lt;p&gt;If you are reading about CI and CD for the first time, fear not, you can absolutely do this and adopt such practices. Start with very small actions, I like to call it “start with baby steps”. Do you build and test your application manually? Start by automating the build steps in a simple script. Have no automated test suite? Start adding automated tests to critical paths on your app. Those steps will slowly build robustness and resilience into your codebase.&lt;/p&gt;
+
+&lt;p&gt;Once you are confident enough with your first scripts, make it executable from a remote service like Github Actions. That is a good start to enable your team to execute the same steps without being concerned with having the right machine or dependency installed.&lt;/p&gt;
+
+&lt;h2 id=&quot;wrapping-up&quot;&gt;Wrapping up&lt;/h2&gt;
+
+&lt;p&gt;DevOps is a very broad topic and we have only covered a very shallow surface here, so there is much more to learn and explore. If you are an engineer and you let the “Ops team handle it”, I ask you to look at it differently. You don’t have to become a DevOps specialist, but if you manage to include DevOps on your tool belt, you and your team will be much better off.&lt;/p&gt;
+
+&lt;p&gt;There is also a very interesting chapter in the book where specific actions can be taken by managers so software delivery is treated as a “first-class citizen” across your organization. Some actions that I find very interesting and I have personally seen it working:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Use failure as a learning opportunity to improve&lt;/li&gt;
+  &lt;li&gt;Create budgets for continuous learning and training&lt;/li&gt;
+  &lt;li&gt;Space to explore new ideas and share it with others&lt;/li&gt;
+  &lt;li&gt;Let your team use their tool of choice (in other words, don’t force them to write Java if they are high-skilled and productive with JavaScript)&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Bruno Paulino</name></author><summary type="html">I have recently finished reading Accelerate: building and Scaling High Performing Technology Organizations to get a more in-depth view into the DevOps landscape and its influence in developer productivity. The book is based on solid research conducted by Dr. Nicole Forsgren, Jez Humble and Gene Kim. The book is an eye-opener for the importance of software delivery performance and the value it brings to any organization that takes it seriously.</summary></entry><entry><title type="html">Using custom React hooks to handle components external events</title><link href="https://bpaulino.com/entries/using-custom-react-hooks-to-handle-components-external-events" rel="alternate" type="text/html" title="Using custom React hooks to handle components external events" /><published>2020-09-20T00:00:00+00:00</published><updated>2020-09-20T00:00:00+00:00</updated><id>https://bpaulino.com/entries/using-custom-react-hooks-to-handle-components-external-events</id><content type="html" xml:base="https://bpaulino.com/entries/using-custom-react-hooks-to-handle-components-external-events">&lt;p&gt;On a side project this weekend, I had the classic case for a modal implementation. In most of the applications you have to deal with daily, you come to a place where you have to confirm some action or review some changes before pushing the &lt;em&gt;“I am 100% sure about this”&lt;/em&gt; button.&lt;/p&gt;
+
+&lt;p&gt;This is the perfect case for a modal, a small view that partially covers the screen and presents you with a few options. Most of the time, there will be a button to close the modal away by clicking on the “close” button on the top-right corner. But an even better way to let the user dismiss the modal is to let them click outside of the view in focus, without forcing them to hit the often too small &lt;strong&gt;“x”&lt;/strong&gt; on top.&lt;/p&gt;
+
+&lt;p&gt;Here is the live implementation of our modal component we will build during this post. Try it out on our &lt;a href=&quot;https://codesandbox.io/s/small-browser-vosod?file=/src/Modal.js&quot;&gt;Codesandbox&lt;/a&gt;.&lt;/p&gt;
+
+&lt;iframe src=&quot;https://codesandbox.io/embed/react-custom-hooks-see0d?fontsize=14&amp;amp;hidenavigation=1&amp;amp;theme=dark&amp;amp;view=preview&quot; style=&quot;width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;&quot; title=&quot;react-custom-hooks&quot; allow=&quot;accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking&quot; sandbox=&quot;allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;For cases like this, you must probably want to watch for clicks or taps outside the main view, in this case, the modal, so you can take the correct action of closing it. But how could you do that in &lt;a href=&quot;https://reactjs.org/&quot;&gt;React?&lt;/a&gt; one way would be to implement a global click handler in the component, something like this:&lt;/p&gt;
+
+&lt;div class=&quot;language-jsx highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;React&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useRef&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useEffect&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;react&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Modal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;onClose&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;props&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;modalRef&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useRef&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+  &lt;span class=&quot;nx&quot;&gt;useEffect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;handleClick&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;modalRef&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;modalRef&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;current&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// Here you can close your modal.&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// how to close it, that is up to you&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// (e.g. removing components, changing routes)&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// in this case, I am calling a `onClose` function&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// passed down as a prop.&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Click happened outside. you can close now.&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;onClose&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// Pointer events are more device agnostic&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// which are able to handle clicks on Desktops and Taps on mobile devices&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// See: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/pointerdown_event&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;addEventListener&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;pointerdown&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;handleClick&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Once our component unmount or update, we must remove the event listener&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;removeEventListener&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;pointerdown&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;handleClick&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// Use the modalRef as dependency for the useEffect hook&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// so whenever this reference changes, the listener will update&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;modalRef&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+  
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;ref=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;modalRef&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;className=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;my-modal&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;className=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;modal-header&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+        Super important Action
+      &lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;className=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;modal-body&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+        This is an important message. read it carefully.
+      &lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;className=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;modal-footer&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;button&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;Cancel&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;button&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;button&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;Ok&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;button&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;But this implementation leaves a lot of room for duplication isn’t? If we need to handle a similar case on a different component, we will be doomed to repeat the same click away logic. We can do better than that by leveraging the power of custom React hooks.&lt;/p&gt;
+
+&lt;h2 id=&quot;sharing-logic-with-custom-react-hooks&quot;&gt;Sharing logic with Custom React hooks&lt;/h2&gt;
+
+&lt;p&gt;In my opinion, hooks are one of the most beautiful features in React. You can compose your components in such a way that gives your application superpowers. React itself leverages the power of hooks with &lt;a href=&quot;https://reactjs.org/docs/hooks-state.html&quot;&gt;useState&lt;/a&gt;, &lt;a href=&quot;https://reactjs.org/docs/hooks-effect.html&quot;&gt;useEffect&lt;/a&gt; and a bunch of others.&lt;/p&gt;
+
+&lt;p&gt;But we are not limited to the hooks React offers, we can create our own hooks, enabling us to share logic in a very functional way across our app. Lets extract that click away logic from our previous modal component into a custom hook:&lt;/p&gt;
+
+&lt;div class=&quot;language-jsx highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useEffect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useRef&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;react&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useClickAway&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ref&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;onClickAway&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// Keep a mutable reference to click away callback&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// and change it every time the component using it changes&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// using 'useRef' here will make sure that we have a mutable&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// and single callback lying around.&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;callbackRef&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useRef&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;onClickAway&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;useEffect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;callbackRef&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;onClickAway&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;onClickAway&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// listen for click events on ref element&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// attaching a handler and calling the callback if necessary&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;useEffect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;onPointerDown&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ref&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ref&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;current&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;callbackRef&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;current&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;addEventListener&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;pointerdown&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;onPointerDown&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;removeEventListener&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;pointerdown&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;onPointerDown&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ref&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;lets break our custom hook down.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;We start by declaring a plain javascript function called &lt;code class=&quot;highlighter-rouge&quot;&gt;useClickAway&lt;/code&gt;. This function takes two arguments. A &lt;code class=&quot;highlighter-rouge&quot;&gt;ref&lt;/code&gt; which is a mutable reference to the component we want to watch for clicks “outside” of its boundaries. And a &lt;code class=&quot;highlighter-rouge&quot;&gt;onClickAway&lt;/code&gt; callback, which will be executed once we detect a click outside.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;We created a ref for the &lt;code class=&quot;highlighter-rouge&quot;&gt;useClickAway&lt;/code&gt; callback using the &lt;code class=&quot;highlighter-rouge&quot;&gt;useRef&lt;/code&gt; hook. This will make sure that we have only one reference to our &lt;code class=&quot;highlighter-rouge&quot;&gt;useClickAway&lt;/code&gt; callback that is captured by our &lt;code class=&quot;highlighter-rouge&quot;&gt;useEffect&lt;/code&gt; calls we will use later.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;On our first useEffect call, we make sure to keep track of the &lt;code class=&quot;highlighter-rouge&quot;&gt;useClickAway&lt;/code&gt; reference. So in case our component updates the &lt;code class=&quot;highlighter-rouge&quot;&gt;useClickAway&lt;/code&gt; reference, we also have to update our internal reference inside our custom hook.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;On our second useEffect call, this where rubber hits the road. If you pay close attention, this call is exactly the same as we implemented in our modal component. The only difference is that we are calling our &lt;code class=&quot;highlighter-rouge&quot;&gt;callbackRef&lt;/code&gt; reference for the &lt;code class=&quot;highlighter-rouge&quot;&gt;onClickAway&lt;/code&gt; function instead. This is an extra layer of check to make sure that we are calling the right reference of the callback once a click happens outside of the view.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;With that in place, how can we use that in our modal component? Lets see how the code looks like now:&lt;/p&gt;
+
+&lt;div class=&quot;language-jsx highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;React&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useRef&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;react&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useClickAway&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;./useClickAway&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Modal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;onClose&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;modalRef&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useRef&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+  &lt;span class=&quot;nx&quot;&gt;useClickAway&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;modalRef&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;onClose&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;className=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;shadow-overlay&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;ref=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;modalRef&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;className=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;my-modal&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;className=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;modal-header&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;Super important Action&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;className=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;modal-body&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+          This is an important message. read it carefully.
+        &lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;className=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;modal-footer&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;onClick=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;onClose&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;Cancel&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;button&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;button&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;Ok&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;button&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Can you notice how clean our modal component looks now? Better yet, we can reuse that same logic across our app just by reusing the &lt;code class=&quot;highlighter-rouge&quot;&gt;useClickAway&lt;/code&gt; hook. Isn’t that cool?&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://codesandbox.io/s/react-custom-hooks-see0d&quot;&gt;Here is the link&lt;/a&gt; to the Codesandbox demo we built on this blogpost. Feel free to copy and use it on your apps.&lt;/p&gt;</content><author><name>Bruno Paulino</name></author><summary type="html">On a side project this weekend, I had the classic case for a modal implementation. In most of the applications you have to deal with daily, you come to a place where you have to confirm some action or review some changes before pushing the “I am 100% sure about this” button.</summary></entry><entry><title type="html">Fine tuning self-hosted Gitlab server to solve SSH scaling problems</title><link href="https://bpaulino.com/entries/allowing-more-connections-on-self-hosted-gitlab" rel="alternate" type="text/html" title="Fine tuning self-hosted Gitlab server to solve SSH scaling problems" /><published>2020-07-05T00:00:00+00:00</published><updated>2020-07-05T00:00:00+00:00</updated><id>https://bpaulino.com/entries/allowing-more-connections-to-gitlab</id><content type="html" xml:base="https://bpaulino.com/entries/allowing-more-connections-on-self-hosted-gitlab">&lt;p&gt;At my current job, we have a self-hosted &lt;a href=&quot;https://gitlab.com/&quot;&gt;Giltab&lt;/a&gt; instance to control our codebases and run automation jobs. If you don’t know what Gitlab is, you probably know &lt;a href=&quot;https://github.com/&quot;&gt;Github&lt;/a&gt; which is a platform to work in collaboration with software teams using &lt;a href=&quot;https://git-scm.com/&quot;&gt;Git&lt;/a&gt; for version control.&lt;/p&gt;
+
+&lt;p&gt;We recently onboarded a new partner to support us with our &lt;a href=&quot;https://github.com/odoo/odoo&quot;&gt;ERP system&lt;/a&gt;. We are working together to improve our current deployment pipeline and make it more resilient and robust. We use &lt;a href=&quot;https://docs.gitlab.com/ee/ci/&quot;&gt;Gitlab CI&lt;/a&gt; to automate our workflows and make our codebase more reliable.&lt;/p&gt;
+
+&lt;p&gt;After setting up &lt;a href=&quot;https://docs.gitlab.com/runner/&quot;&gt;more runners&lt;/a&gt;, we noticed something strange happening randomly and quite frequently during our CI builds. While fetching more repositories, some builds were failing with the following message:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;fatal: Could not read from remote repository.
+Please make sure you have the correct access rights
+and the repository exists.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Humm, that seems strange. Our runners have the correct access rights to the repositories. Also, this error was happening randomly for different repositories that was clearly working during other exact same builds.&lt;/p&gt;
+
+&lt;p&gt;With this information at hand, we started off the debugging journey. We started monitoring the system and checking the server logs. Everything seemed normal. There was nothing draining our resources to the point where our server would start dropping connections.&lt;/p&gt;
+
+&lt;h2 id=&quot;ssh-load-balancing-and-maxstartups&quot;&gt;SSH Load Balancing and MaxStartups&lt;/h2&gt;
+
+&lt;p&gt;Discussing the issue among my smart teammates, we couldn’t see a reason for Gitlab itself to be dropping connections with the amount of workload. There could be some configuration with our &lt;a href=&quot;https://www.openssh.com/&quot;&gt;OpenSSH&lt;/a&gt; defaults that might be responsible for that. And we indeed found one.&lt;/p&gt;
+
+&lt;p&gt;OpenSSH has this neat setting called &lt;code class=&quot;highlighter-rouge&quot;&gt;MaxStartups&lt;/code&gt; which is composed by 3 values separated by columns represented as &lt;code class=&quot;highlighter-rouge&quot;&gt;start:rate:full&lt;/code&gt;. They mean:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;start&lt;/code&gt;: The max number of unauthenticated connections&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rate&lt;/code&gt;: The percentage of connections that will be dropped once our total of unauthenticated connections reaches the number specified at &lt;strong&gt;start&lt;/strong&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;full&lt;/code&gt;: By the time the queue of pending connections reaches the number specified at &lt;strong&gt;full&lt;/strong&gt;, all connections will be dropped.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you look at &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/ssh/sshd_config&lt;/code&gt;, the SSH configuration file, you will see:&lt;/p&gt;
+
+&lt;div class=&quot;language-toml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;MaxStartups&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This configuration means: starting with &lt;code class=&quot;highlighter-rouge&quot;&gt;10&lt;/code&gt; pending to authenticate connections, our server will start dropping &lt;code class=&quot;highlighter-rouge&quot;&gt;30%&lt;/code&gt; of new connection attempts. Once our queue of pending connections reaches &lt;code class=&quot;highlighter-rouge&quot;&gt;100&lt;/code&gt;, all new connections will be dropped with no mercy.&lt;/p&gt;
+
+&lt;p&gt;After understanding how MaxStartups works, we looked again at our runners and we noticed that some jobs were fetching 10 different repositories in parallel during the build and aggregating them to build a &lt;a href=&quot;https://en.wikipedia.org/wiki/Docker_(software)&quot;&gt;Docker image&lt;/a&gt;. We were really playing the dice when running those builds 😅.&lt;/p&gt;
+
+&lt;p&gt;With that in mind, we tweaked MaxStartups with the following values:&lt;/p&gt;
+
+&lt;div class=&quot;language-toml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;MaxStartups&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;60&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;60&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After that, just restart our SSH daemon with:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;systemctl restart ssh.service
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We could see that the MaxStartups change instantly fixed the issue. Our builds were flying again with zero connection drops. The new settings allowed us greater leeway to connect to our server simultaneously, reducing the risk of dropped connections.&lt;/p&gt;
+
+&lt;h2 id=&quot;defaults-can-only-take-you-so-far&quot;&gt;Defaults can only take you so far&lt;/h2&gt;
+
+&lt;p&gt;The default settings were more than enough for us to start using &lt;a href=&quot;https://docs.gitlab.com/omnibus/&quot;&gt;Gitlab with its Omnibus package&lt;/a&gt;. I didn’t even know about those SSH settings to begin with, but once you start hitting scaling problems, there is usually a escape hatch that can help you to leverage the same resources to a much greater usage scenario.&lt;/p&gt;
+
+&lt;p&gt;Only after fixing the issue that I found Gitlab themselves had the exact same issue. &lt;a href=&quot;https://about.gitlab.com/blog/2019/08/27/tyranny-of-the-clock/&quot;&gt;They wrote a great blog post about it.&lt;/a&gt;&lt;/p&gt;</content><author><name>Bruno Paulino</name></author><summary type="html">At my current job, we have a self-hosted Giltab instance to control our codebases and run automation jobs. If you don’t know what Gitlab is, you probably know Github which is a platform to work in collaboration with software teams using Git for version control.</summary></entry><entry><title type="html">Hardening your server security with Fail2Ban</title><link href="https://bpaulino.com/entries/hardening-your-server-security-with-fail2ban" rel="alternate" type="text/html" title="Hardening your server security with Fail2Ban" /><published>2020-07-01T00:00:00+00:00</published><updated>2020-07-01T00:00:00+00:00</updated><id>https://bpaulino.com/entries/hardening-your-server-security-with-fail2ban</id><content type="html" xml:base="https://bpaulino.com/entries/hardening-your-server-security-with-fail2ban">&lt;p&gt;I was recently checking the access logs from some linux servers I maintain and I was very surprised by the ssh login attempts those servers were facing. My servers have password access disabled by default, so only previously registered ssh keys are allowed to login. But even then, the amount of login attempts was disturbing. Around 500 attempts a day. I had to do something about it.&lt;/p&gt;
+
+&lt;p&gt;Talking to my coworkers about it, one of them suggested a tool called &lt;a href=&quot;https://www.fail2ban.org/wiki/index.php/Main_Page&quot;&gt;Fail2Ban&lt;/a&gt;. It runs a background service that monitors the log files on your server and based on suspicious activities, like unsuccessful login attempts, it blocks access from those bad actors by updating firewall rules to reject any connection for their IP addresses.&lt;/p&gt;
+
+&lt;p&gt;My first thought was &lt;em&gt;“I should be careful because I could ban myself and lose access to my server permanently”&lt;/em&gt;. So I started the installation process very carefully. Fortunately, the default configuration only blocks the IP access for 10 minutes, so worst case I would have a few minutes to have coffee. I also started the process in a “trashable” server, so if something goes wrong, I could just throw it away and start anew.&lt;/p&gt;
+
+&lt;p&gt;We will customize those settings for a more robust strategy later on here on this post.&lt;/p&gt;
+
+&lt;h2 id=&quot;installing-fail2ban&quot;&gt;Installing Fail2Ban&lt;/h2&gt;
+
+&lt;p&gt;Let’s get started. The first step is to install Fail2Ban on your server (Ubuntu):&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Update dependencies&lt;/span&gt;
+apt update &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt upgrade &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# install fail2ban&lt;/span&gt;
+apt &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;fail2ban
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Fail2Ban comes with a pretty solid default configuration, but since our goal is to customize it to our needs, they recommend us to copy the default configuration file with the &lt;code class=&quot;highlighter-rouge&quot;&gt;.local&lt;/code&gt; extension. The reason for this is that if we update Fail2Ban, the original configuration file will get changed and we will lose our custom configuration.&lt;/p&gt;
+
+&lt;h2 id=&quot;put-those-bad-actors-in-jail&quot;&gt;Put those bad actors in jail&lt;/h2&gt;
+
+&lt;p&gt;The configuration files are located at &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/fail2ban&lt;/code&gt;, so lets go ahead and create a local copy of those files:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Copy fail2ban default configuration&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; /etc/fail2ban/fail2ban.conf /etc/fail2ban/fail2ban.local
+&lt;span class=&quot;c&quot;&gt;# Copy fail2ban jail configuration&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Fail2Ban uses the concept of &lt;code class=&quot;highlighter-rouge&quot;&gt;jails&lt;/code&gt; to monitor specific services like nginx, ssh, apache and even your custom application logs like Node.js or Java apps. Each jail specifies a configuration for a specific application or service running on your server. By default, the &lt;code class=&quot;highlighter-rouge&quot;&gt;sshd&lt;/code&gt; jail is active.&lt;/p&gt;
+
+&lt;h2 id=&quot;avoid-banning-specific-ip-addresses&quot;&gt;Avoid banning specific IP Addresses&lt;/h2&gt;
+
+&lt;p&gt;To prevent specific IP addresses of being banned, you can create an allow-list in the &lt;code class=&quot;highlighter-rouge&quot;&gt;fail2ban.local&lt;/code&gt; file. Go ahead and edit the following line with your IP Addresses using space (and/or comma) as a separator:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# allow IP addresses from your VPN or other servers here&lt;/span&gt;
+ignoreip &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 127.0.0.1/8 ::1 YOU_IP_ADDRESS_HERE
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;activating-fail2ban&quot;&gt;Activating Fail2Ban&lt;/h2&gt;
+
+&lt;p&gt;Now that we have Fail2Ban installed and pre-configured by default, lets start the service:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;systemctl start fail2ban
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;As soon as you start Fail2Ban, you might already see some bad actors blocked. First lets check which jails are active with the following command:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fail2ban-client status
+&lt;span class=&quot;c&quot;&gt;# You should see something like this as output:&lt;/span&gt;
+Status
+|- Number of jail:	1
+&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;- Jail list: sshd
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Ok, so we have Fail2Ban up and running, lets check the &lt;code class=&quot;highlighter-rouge&quot;&gt;sshd&lt;/code&gt; jail with the following command:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fail2ban-client status sshd
+&lt;span class=&quot;c&quot;&gt;# You should see something like this as output&lt;/span&gt;
+Status &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;the jail: sshd
+|- Filter
+|  |- Currently failed:	10
+|  |- Total failed:	511
+|  &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;- File list:	/var/log/auth.log
+&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;- Actions
+   |- Currently banned:	9
+   |- Total banned:	77
+   &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;- Banned IP list:	218.255.86.106 222.186.31.83 85.209.48.228 180.166.184.66 218.92.0.220 109.255.185.65 150.158.178.137 111.231.132.94 66.70.130.149
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In my case, I could immediately see the benefit of Fail2Ban. after a few minutes, I had already several IP addresses banned.&lt;/p&gt;
+
+&lt;p&gt;Lets lookup our IP table to see if those IP addresses match with the following command:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;iptables &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-L&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# You should see something like this as output&lt;/span&gt;
+Chain f2b-sshd &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 references&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+target     prot opt &lt;span class=&quot;nb&quot;&gt;source               &lt;/span&gt;destination         
+REJECT     all  &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;  103.100.211.72       0.0.0.0/0            reject-with icmp-port-unreachable
+REJECT     all  &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;  66.70.130.149        0.0.0.0/0            reject-with icmp-port-unreachable
+REJECT     all  &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;  111.231.132.94       0.0.0.0/0            reject-with icmp-port-unreachable
+REJECT     all  &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;  150.158.178.137      0.0.0.0/0            reject-with icmp-port-unreachable
+REJECT     all  &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;  109.255.185.65       0.0.0.0/0            reject-with icmp-port-unreachable
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;That is great. Fail2Ban is updating our IP filter rules which will prevent connections from those bad actors.&lt;/p&gt;
+
+&lt;h2 id=&quot;changing-the-defaults&quot;&gt;Changing the defaults&lt;/h2&gt;
+
+&lt;p&gt;The default configuration blocks those IP addresses for 600 seconds (10 minutes). This is a pretty good start, but we can do better. Ideally, if some of those IP addresses are attempting to connect every 10 minutes, we could block them for a greater timespan or even permanently.&lt;/p&gt;
+
+&lt;p&gt;One thing to consider is that if we block IPs permanently, we can potentially increase our IP table lookup time, which means that connecting to our server can become very slow since this list of blocked IPs can grow indefinitely.&lt;/p&gt;
+
+&lt;p&gt;To help us with that, Fail2Ban comes with &lt;code class=&quot;highlighter-rouge&quot;&gt;recidive&lt;/code&gt; which is a jail for its own logs. It works like that:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;It looks into Fail2Ban own logs for banned IP addresses from other jails.&lt;/li&gt;
+  &lt;li&gt;If those IP addresses are found in the logs more than 5 times in the current day, it blocks them for 1 week.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;That sounds like a good strategy. Our IP table won’t grow very large (in theory) because in 1 week it will rollback and allow those IP addresses to connect again. If they act in bad faith again, they will be blocked and the cycle repeats.&lt;/p&gt;
+
+&lt;p&gt;So let’s go ahead and activate &lt;code class=&quot;highlighter-rouge&quot;&gt;recidive&lt;/code&gt;. Edit the file &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/fail2ban/jail.local&lt;/code&gt; (I am using nano, but feel free to use a different text editor). Look for the following code:&lt;/p&gt;
+
+&lt;div class=&quot;language-conf highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Jail for more extended banning of persistent abusers
+# !!! WARNINGS !!!
+# 1. Make sure that your loglevel specified in fail2ban.conf/.local
+#    is not at DEBUG level -- which might then cause fail2ban to fall into
+#    an infinite loop constantly feeding itself with non-informative lines
+# 2. Increase dbpurgeage defined in fail2ban.conf to e.g. 648000 (7.5 days)
+#    to maintain entries for failed logins for sufficient amount of time
+&lt;/span&gt;[&lt;span class=&quot;n&quot;&gt;recidive&lt;/span&gt;]
+
+&lt;span class=&quot;n&quot;&gt;logpath&lt;/span&gt;  = /&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;fail2ban&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;banaction&lt;/span&gt; = %(&lt;span class=&quot;n&quot;&gt;banaction_allports&lt;/span&gt;)&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;bantime&lt;/span&gt;  = &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;findtime&lt;/span&gt; = &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Notice that the configuration is already in place. We only need to activate it:&lt;/p&gt;
+
+&lt;div class=&quot;language-conf highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# ... comments
+&lt;/span&gt;[&lt;span class=&quot;n&quot;&gt;recidive&lt;/span&gt;]
+&lt;span class=&quot;c&quot;&gt;# Include the next line to enable recidive
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;enabled&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;logpath&lt;/span&gt;  = /&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;fail2ban&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;banaction&lt;/span&gt; = %(&lt;span class=&quot;n&quot;&gt;banaction_allports&lt;/span&gt;)&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;bantime&lt;/span&gt;  = &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;findtime&lt;/span&gt; = &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now we only need to restart the Fail2Ban service with:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;systemctl restart fail2ban
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Let’s check our &lt;strong&gt;fail2ban&lt;/strong&gt; status to see which jails are running after our update:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fail2ban-client status
+&lt;span class=&quot;c&quot;&gt;# You should see something like this as output&lt;/span&gt;
+Status
+|- Number of jail:	2
+&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;- Jail list:	recidive, sshd
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now that &lt;code class=&quot;highlighter-rouge&quot;&gt;recidive&lt;/code&gt; is active, you can check if some IP addresses were banned for the whole week:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fail2ban-client status recidive
+&lt;span class=&quot;c&quot;&gt;# You should see something like this as output&lt;/span&gt;
+Status &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;the jail: recidive
+|- Filter
+|  |- Currently failed:	25
+|  |- Total failed:	90
+|  &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;- File list:	/var/log/fail2ban.log
+&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;- Actions
+   |- Currently banned:	10
+   |- Total banned:	10
+   &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;- Banned IP list:	129.226.114.97 103.246.240.26 142.93.60.53 167.172.163.162 109.255.185.65 150.158.178.137 66.70.130.149 180.166.184.66 64.225.35.135 218.255.86.106
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now we have Fail2Ban monitoring our SSH access and fully configured.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-to-do-if-i-block-myself&quot;&gt;What to do if I block myself&lt;/h2&gt;
+
+&lt;p&gt;You should be very careful with your server access from now on. Make sure that you have access from your computer and I highly recommend &lt;a href=&quot;https://www.cyberciti.biz/faq/how-to-disable-ssh-password-login-on-linux/&quot;&gt;disabling password access&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can wait the default 10 minutes or you can access from a different IP address (like routing your mobile phone) and remove your IP address from the blocklist with the following command:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fail2ban-client &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;jailname unbanip &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;IP_ADDRESS_HERE]
+&lt;span class=&quot;c&quot;&gt;# Here is how it could look like&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# if you want to unban an IP address from the sshd jail&lt;/span&gt;
+fail2ban-client &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;sshd unbanip 1.1.1.1
+&lt;span class=&quot;c&quot;&gt;# from the recidive jail&lt;/span&gt;
+fail2ban-client &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;recidive unbanip 1.1.1.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;where-to-go-from-here&quot;&gt;Where to go from here&lt;/h2&gt;
+
+&lt;p&gt;Fail2Ban is quite extensive and supports many different kinds of extensions like your own custom jails. The good thing is that amazing people around the world like to share their experience as well, so if you want to setup Fail2Ban for a different service like nginx, &lt;a href=&quot;https://www.digitalocean.com/community/tutorials/how-to-protect-an-nginx-server-with-fail2ban-on-ubuntu-14-04&quot;&gt;Digital Ocean has a great tutorial about it&lt;/a&gt; with a step-by-step guide.&lt;/p&gt;
+
+&lt;p&gt;You can also read more about it on the &lt;a href=&quot;https://www.fail2ban.org/wiki/index.php/Main_Page&quot;&gt;Fail2Ban official page&lt;/a&gt;&lt;/p&gt;</content><author><name>Bruno Paulino</name></author><summary type="html">I was recently checking the access logs from some linux servers I maintain and I was very surprised by the ssh login attempts those servers were facing. My servers have password access disabled by default, so only previously registered ssh keys are allowed to login. But even then, the amount of login attempts was disturbing. Around 500 attempts a day. I had to do something about it.</summary></entry><entry><title type="html">Dockerizing React Apps</title><link href="https://bpaulino.com/entries/12-dockerizing-react-apps" rel="alternate" type="text/html" title="Dockerizing React Apps" /><published>2020-03-02T00:00:00+00:00</published><updated>2020-03-02T00:00:00+00:00</updated><id>https://bpaulino.com/entries/dockerizing-react-apps</id><content type="html" xml:base="https://bpaulino.com/entries/12-dockerizing-react-apps">&lt;p&gt;While creating ReactJS apps, you probably don’t have to think too much about how to deploy them. ReactJS applications can be easily bundled in a folder, consisting of plain HTML, CSS and Javascript files. That should be simple enough to upload it to a S3 Bucket, host it on &lt;a href=&quot;https://pages.github.com/&quot;&gt;Github Pages&lt;/a&gt; or even integrating great services like &lt;a href=&quot;https://www.netlify.com/&quot;&gt;Netlify&lt;/a&gt; or &lt;a href=&quot;https://zeit.co/&quot;&gt;Zeit&lt;/a&gt; for fast and automated deployments.&lt;/p&gt;
+
+&lt;p&gt;But this week, I had the task of deploying a React app created with &lt;a href=&quot;https://github.com/facebook/create-react-app&quot;&gt;create-react-app&lt;/a&gt; on a VPS under a subdomain. I didn’t want to use stone-age FTP, I wanted to have an automated docker container with my app where I could deploy anywhere without much configuration.&lt;/p&gt;
+
+&lt;p&gt;I created a demo app with all the configurations detailed on this post. The &lt;a href=&quot;https://github.com/brunojppb/dockerized-react-app&quot;&gt;code is available here&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;preparing-our-dockerfile&quot;&gt;Preparing our Dockerfile&lt;/h2&gt;
+
+&lt;p&gt;We start out by creating a &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; on our project root folder with the following content:&lt;/p&gt;
+
+&lt;div class=&quot;language-dockerfile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# This image won't be shipped with our final container&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# we only use it to compile our app.&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; node:12.2.0-alpine as build&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; PATH /app/node_modules/.bin:$PATH&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;WORKDIR&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; /app&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;COPY&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; . /app&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;npm &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;npm run build
+
+&lt;span class=&quot;c&quot;&gt;# production image using nginx and including our&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# compiled app only. This is called multi-stage builds&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; nginx:1.16.0-alpine&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;COPY&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; --from=build /app/build /usr/share/nginx/html&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; /etc/nginx/conf.d/default.conf
+&lt;span class=&quot;k&quot;&gt;COPY&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; nginx/nginx.conf /etc/nginx/conf.d&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;EXPOSE&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; 80&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;CMD&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; [&quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;On the snippet of code above, we are using a feature called &lt;a href=&quot;https://docs.docker.com/develop/develop-images/multistage-build/&quot;&gt;multi-stage builds&lt;/a&gt;. It requires Docker 17.05 or higher, but the benefit of this feature is enormous, which I will explain next. On the first half of the script, we are building a Docker image based on &lt;code class=&quot;highlighter-rouge&quot;&gt;node:12.2.0-alpine&lt;/code&gt; which is a very tiny linux image with node included. Now notice the &lt;code class=&quot;highlighter-rouge&quot;&gt;as build&lt;/code&gt; at the end of the first line. This creates an intermediary image with our dependencies that can be thrown away after build. Soon after that, we install all the dependencies from my React app with &lt;code class=&quot;highlighter-rouge&quot;&gt;npm install&lt;/code&gt; and later we execute &lt;code class=&quot;highlighter-rouge&quot;&gt;npm run build&lt;/code&gt; to compile the React app optimized for production.&lt;/p&gt;
+
+&lt;p&gt;On the second half of the code, we create a new Docker image based on &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx:1.16.0-alpine&lt;/code&gt; which is also a tiny linux including &lt;a href=&quot;https://www.nginx.com/&quot;&gt;nginx&lt;/a&gt;, a high performance web server to serve our React app. We use the command &lt;code class=&quot;highlighter-rouge&quot;&gt;COPY&lt;/code&gt; to extract the content from our previous image called &lt;code class=&quot;highlighter-rouge&quot;&gt;build&lt;/code&gt; and copy it into &lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/share/nginx/html&lt;/code&gt;. Next, we remove the default nginx configuration file and add our custom configuration under &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx/nginx.conf&lt;/code&gt; with the following content:&lt;/p&gt;
+
+&lt;div class=&quot;language-nginx highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# To support react-router, we must configure nginx
+# to route the user to the index.html file for all initial requests
+# e.g. landing on /users/1 should render index.html
+# then React takes care of mounting the correct routes
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+  &lt;span class=&quot;kn&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;80&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+  &lt;span class=&quot;kn&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;root&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;/usr/share/nginx/html&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;index&lt;/span&gt;  &lt;span class=&quot;s&quot;&gt;index.html&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;index.htm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;try_files&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$uri&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$uri&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/index.html&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;kn&quot;&gt;error_page&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;502&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;503&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;504&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;/50x.html&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+  &lt;span class=&quot;kn&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/50x.html&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;root&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;/usr/share/nginx/html&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This configuration is very important for apps using &lt;a href=&quot;https://reacttraining.com/react-router/web/guides/quick-start&quot;&gt;React Router&lt;/a&gt;. Whenever you share a link to your React app, lets say, a link to &lt;code class=&quot;highlighter-rouge&quot;&gt;/users/1/profile&lt;/code&gt;, this link tells the browser to request this path from the web server. If the web server is not configured properly, our React app won’t be able to render the initial &lt;strong&gt;index.html&lt;/strong&gt; file containing our React application.&lt;br /&gt;
+Using our custom configuration, we tell nginx to route all requests to the root folder &lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/share/nginx/html&lt;/code&gt; which is the directory we previously copied our React app during image build. We should not forget that React apps are Single Page Applications, which means that there is only one page to be rendered on the first request, the rest of the job is taken care by React on the browser.&lt;/p&gt;
+
+&lt;h2 id=&quot;building-our-docker-image&quot;&gt;Building our Docker Image&lt;/h2&gt;
+
+&lt;p&gt;We already have all the required code to build our Docker image. Lets execute the Docker command to build it:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Make sure to be on the same folder of your React app&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# replace 'my-react-app' with whatever name you find appropriate&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# this is the image tag you will push to your Docker registry&lt;/span&gt;
+docker build &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; my-react-app &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;When the image is built, lets check the size of the image we just generated with the following command:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# List all the images on your machine&lt;/span&gt;
+docker images
+&lt;span class=&quot;c&quot;&gt;# You should see something like this:&lt;/span&gt;
+REPOSITORY     TAG       IMAGE ID        CREATED          SIZE
+my-react-app   latest    c35c322d4c37    20 seconds ago   22.5MB
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Alright, our Docker image is ready to go on to a Docker Registry somewhere. One interesting thing about this image is that the size is only 22.5MB. This is really great for deployment because small images make automated pipelines run much faster during download, image building and upload.&lt;/p&gt;
+
+&lt;h2 id=&quot;running-our-react-app-with-docker-compose&quot;&gt;Running our React app with docker-compose&lt;/h2&gt;
+
+&lt;p&gt;What we need now is a way to run this Docker image. For testing it locally, lets create a file called &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose.yml&lt;/code&gt; with the following content:&lt;/p&gt;
+
+&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;3.7'&lt;/span&gt;
+
+&lt;span class=&quot;na&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;my_react_app&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;.&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;8000:80'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://docs.docker.com/compose/&quot;&gt;Docker Compose&lt;/a&gt; will take care of building the image in case it doesn’t exist and also bind the port &lt;code class=&quot;highlighter-rouge&quot;&gt;8000&lt;/code&gt; from our local machine to the port &lt;code class=&quot;highlighter-rouge&quot;&gt;80&lt;/code&gt; on the container. Now open your browser on &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:8000&lt;/code&gt; and check if our React app is running there. You should see something like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/posts/react_js_app_docker.png&quot; alt=&quot;React JS App running on Docker&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;Running a React app with Docker might not be the best deployment, but if you need to run docker like in my case, it can be very simple and effective. This opens the door for a lot of automation pipelines you can hook up on the project like &lt;a href=&quot;https://github.com/features/actions&quot;&gt;Github Actions&lt;/a&gt; or &lt;a href=&quot;https://docs.gitlab.com/ee/ci/&quot;&gt;Gitlab CI/CD&lt;/a&gt; to automate your deployment process. You can find &lt;a href=&quot;https://github.com/brunojppb/dockerized-react-app&quot;&gt;the code of this post here.&lt;/a&gt;&lt;/p&gt;</content><author><name>Bruno Paulino</name></author><summary type="html">While creating ReactJS apps, you probably don’t have to think too much about how to deploy them. ReactJS applications can be easily bundled in a folder, consisting of plain HTML, CSS and Javascript files. That should be simple enough to upload it to a S3 Bucket, host it on Github Pages or even integrating great services like Netlify or Zeit for fast and automated deployments. But this week, I had the task of deploying a React app created with create-react-app on a VPS under a subdomain. I didn’t want to use stone-age FTP, I wanted to have an automated docker container with my app where I could deploy anywhere without much configuration. I created a demo app with all the configurations detailed on this post. The code is available here</summary></entry><entry><title type="html">Rapid Prototyping with GatsbyJS</title><link href="https://bpaulino.com/entries/11-rapid-prototyping-with-gatsby-js" rel="alternate" type="text/html" title="Rapid Prototyping with GatsbyJS" /><published>2020-02-26T00:00:00+00:00</published><updated>2020-02-26T00:00:00+00:00</updated><id>https://bpaulino.com/entries/rapid-prototyping-with-gatsby-js</id><content type="html" xml:base="https://bpaulino.com/entries/11-rapid-prototyping-with-gatsby-js">&lt;p&gt;On February 17th, I &lt;a href=&quot;https://www.meetup.com/ReactVienna/events/268478297/&quot;&gt;gave a talk at the React Vienna Meetup&lt;/a&gt; about this topic and I thought writing a blogpost about could benefit some folks that either couldn’t make it or are living somewhere else around the globe. You can find my slides &lt;a href=&quot;https://bpaulino.com/rapid-prototyping-gatsby-js/&quot;&gt;here.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;I would like to start off with a question. What if you want to put together a website with the most modern web tech out there? You probably need to know a bunch of things to start a simple website. Do you want to use modern Javascript syntax? no problem, just use &lt;a href=&quot;https://webpack.js.org/&quot;&gt;Webpack&lt;/a&gt; and &lt;a href=&quot;https://babeljs.io/&quot;&gt;Babel&lt;/a&gt; to help you transpile your code. Do you want to put your website online? just configure an small box on Digital Ocean, add Nginx and your website is online. Do you want to write blogposts and publish them using a CMS? No problem, just implement your backend, maybe using Postgres as a database. This list goes on and on if you try to start with a modern tool chain.&lt;/p&gt;
+
+&lt;p&gt;To get this whole setup done, and most importantly, correctly configured, can be hard. It is even worse if you are a beginner.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/posts/stackoverflow_hard_time.jpg&quot; alt=&quot;A beginner having a hard time on Stackoveflow&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;static-site-generators-come-to-the-rescue&quot;&gt;Static site generators come to the rescue&lt;/h2&gt;
+
+&lt;p&gt;So you realize that this is an enormous amount of tools (and knowledge) you need to know upfront to start with a simple website. That is really overwhelming. This is where static site generators really shine. There is usually minimal to none configuration you have to do, there are many templates you can use to start with and most of the configuration thing is done for you. Some cool static site generators are:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://jekyllrb.com/&quot;&gt;Jekyll (Ruby)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gohugo.io/&quot;&gt;Hugo (Javascript)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://vuejs.org/&quot;&gt;NuxtJS (Vue.js)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.gatsbyjs.org/&quot;&gt;GatsbyJS (ReactJS)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The most interesting one that caught my attention lately was &lt;a href=&quot;https://www.gatsbyjs.org/&quot;&gt;GatsbyJS.&lt;/a&gt; I have been working with React for the past 3 years and finding a decent static site generator based on React was very interesting. Right from the start, it solves all the problems I mentioned before. You don’t have to configure anything to start. You only need the minimal tools installed like a &lt;a href=&quot;https://code.visualstudio.com/&quot;&gt;good text editor&lt;/a&gt; and &lt;a href=&quot;https://nodejs.org/en/&quot;&gt;node.js&lt;/a&gt;. There is also no need to have a server for hosting. It generates all the pages statically, which means that when you bundle your website, you have one HTML file for each page of your website, just like the web is supposed to work. And simple enough, you can just upload those files to a static site hosting provider like &lt;a href=&quot;https://www.netlify.com/&quot;&gt;netlify&lt;/a&gt; or even use &lt;a href=&quot;https://pages.github.com/&quot;&gt;Github Pages&lt;/a&gt; to host it for free.&lt;/p&gt;
+
+&lt;p&gt;Gatsby has an incredible feature that sets it apart from other generators: Your datasource doesn’t have to be statically located within the code, like markdown files. It can be pulled from a remote datasource, like a headless CMS, before generating the pages.&lt;br /&gt;
+That is a big deal if you want the freedom of publishing blogposts from a nice CMS or you have a team of content creators that are simultaneously creating content. Their don’t have to be developers to be able to create a blog post, and Gatsby enables exactly that.&lt;/p&gt;
+
+&lt;h2 id=&quot;our-little-experiment&quot;&gt;Our little experiment&lt;/h2&gt;
+
+&lt;p&gt;At &lt;a href=&quot;https://woombikes.com/&quot;&gt;woom&lt;/a&gt; we are modernizing our tech stack. One interesting project we had was to rebuild our blog frontend, but in a way that we don’t get stuck at a specific platform like we had before (using our ERP). As the main engineer responsible for this project, I decided to give Gatsby a try. I was impressed with the development speed we had using it to implement our blog prototype. We ended up using &lt;a href=&quot;https://www.hubspot.com/&quot;&gt;Hubspot&lt;/a&gt; as our CMS since we are using it for other marketing purposes, but the frontend is still portable if we decide to shift to a new CMS. &lt;a href=&quot;https://blog.woombikes.com&quot;&gt;You can take a look at our blog here.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;This is how it looks like after we got it done:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/posts/woom_blog_prototype.png&quot; alt=&quot;woom blog using GatsbyJS&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;But what are the main advantages of Gatsby anyway? What really made us to look at it differently?&lt;/p&gt;
+
+&lt;h3 id=&quot;it-uses-react&quot;&gt;It uses React&lt;/h3&gt;
+
+&lt;p&gt;If you never heard of &lt;a href=&quot;https://reactjs.org/&quot;&gt;React&lt;/a&gt; before, it is the state-of-the-art of frontend libraries. Writing frontend with React requires a different approach, but it definitely pays off. It lets you break your application into reusable components, which makes it infinitely simpler to reason about it and debug.&lt;/p&gt;
+
+&lt;h3 id=&quot;react-hooks&quot;&gt;React hooks&lt;/h3&gt;
+
+&lt;p&gt;Even though Gatsby generates static pages, you can still benefit from React state management. hooks like &lt;code class=&quot;highlighter-rouge&quot;&gt;useState&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;useContext&lt;/code&gt; are still there to help us have a more dynamic page.&lt;/p&gt;
+
+&lt;h3 id=&quot;graphql-included&quot;&gt;GraphQL included&lt;/h3&gt;
+
+&lt;p&gt;Using the built-in GraphQL API, you can pull data from a remote datasource, process static files from your local repository, like lets say images and transform them to alternative resolutions for different device sizes and so on.&lt;/p&gt;
+
+&lt;h3 id=&quot;development-and-production-configuration-out-of-the-box&quot;&gt;Development and Production configuration out-of-the-box&lt;/h3&gt;
+
+&lt;p&gt;You don’t have to hassle around Webpack configurations, pipelines or anything like this. The basics, which is already what you need to start, is already there, properly configured and ready to row with the single command &lt;code class=&quot;highlighter-rouge&quot;&gt;yarn develop&lt;/code&gt; during development and  &lt;code class=&quot;highlighter-rouge&quot;&gt;yarn build&lt;/code&gt; to deploy a new build.&lt;/p&gt;
+
+&lt;h3 id=&quot;rich-plugin-ecosystem&quot;&gt;Rich plugin ecosystem&lt;/h3&gt;
+
+&lt;p&gt;When looking for a framework, you usually have to consider how flexible it can be, so you can benefit from the community, using code extensions and plugins. Gatsby has a very rich plugin ecosystem, and the most important ones, like &lt;a href=&quot;https://www.gatsbyjs.org/packages/gatsby-image/&quot;&gt;gatsby-image&lt;/a&gt; for image processing are already there, provided and maintained by Gatsby directly, which is a good sign that will be kept up2date.&lt;/p&gt;
+
+&lt;h2 id=&quot;lets-try-to-build-something&quot;&gt;Lets try to build something&lt;/h2&gt;
+
+&lt;p&gt;For this &lt;del&gt;talk&lt;/del&gt; blogpost, I created a little demo. This is a website with a blog section. The blogposts come from &lt;a href=&quot;https://www.storyblok.com/&quot;&gt;the headless CMS Storyblok.&lt;/a&gt;. You can find the source code of &lt;a href=&quot;https://github.com/brunojppb/gatsby-minimal-blog&quot;&gt;this demo here.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/posts/gatsby_minimal_website.png&quot; alt=&quot;Gatsby minimal website with Blog component&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Clone the &lt;a href=&quot;https://github.com/brunojppb/gatsby-minimal-blog&quot;&gt;demo repo&lt;/a&gt; and execute the following commands:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Clone the repo&lt;/span&gt;
+git clone git@github.com:brunojppb/gatsby-minimal-blog.git
+&lt;span class=&quot;c&quot;&gt;# Now lets go to our newly created project&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;gatsby-minimal-blog
+&lt;span class=&quot;c&quot;&gt;# install all dependencies&lt;/span&gt;
+yarn &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# and fire up the dev server&lt;/span&gt;
+yarn develop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now lets go to our browser and type in &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:8000&lt;/code&gt; to see what happens.
+You will see a nice and bare-minimum website, very similar to the screenshot I posted above, but with a link to the blog section of the website.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/posts/gatsby_minimal_website_home.png&quot; alt=&quot;Gatsby Minimal website home page&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;If you take a look at the terminal, you will see that there was an error with a plugin. something like &lt;code class=&quot;highlighter-rouge&quot;&gt;failed createPages - 0.193s&lt;/code&gt;. This is because when we hit &lt;code class=&quot;highlighter-rouge&quot;&gt;yarn develop&lt;/code&gt; Gatsby kicks in and try to fetch our posts from Storyblok. But since you don’t have an account there yet, it can’t find out your API token to access your blogposts. So go ahead and open &lt;a href=&quot;https://app.storyblok.com/#!/&quot;&gt;Storyblok&lt;/a&gt; to create your account and select the demo.&lt;br /&gt;
+After signing in, you will that there is a &lt;strong&gt;demo space&lt;/strong&gt; created for you. Don’t get bogged down with the details, Lets just try to create content there. On the left-hand side, click on &lt;strong&gt;Content&lt;/strong&gt;, inside content, you will see a list of different assets. You have to delete all of them, but leave &lt;strong&gt;Blog Articles&lt;/strong&gt;. Now select &lt;strong&gt;Blog Articles&lt;/strong&gt;.&lt;br /&gt;
+You will see a list of different contents, select all of them and delete it. We will create a new article from scratch.
+On the top-right corner, select &lt;strong&gt;“+Entry”&lt;/strong&gt;. You will be asked to enter a title. On the &lt;code class=&quot;highlighter-rouge&quot;&gt;content type&lt;/code&gt; dialog, select &lt;code class=&quot;highlighter-rouge&quot;&gt;article&lt;/code&gt; and hit create. After this screen, you will land on a CMS-like page where you can write on the right-hand side menu and see it live rendering on the left-hand side. Try it out, update the title field and write something into the &lt;strong&gt;long text&lt;/strong&gt; dialog. When you are happy with it, just hit &lt;strong&gt;publish&lt;/strong&gt; on the top-right corner.&lt;/p&gt;
+
+&lt;p&gt;Now lets get the API Key to access our content. To to settings -&amp;gt; API-Keys. There you have an API token called &lt;code class=&quot;highlighter-rouge&quot;&gt;public&lt;/code&gt;. copy it to your clipboard. Now head back to your text editor and create a file called &lt;code class=&quot;highlighter-rouge&quot;&gt;.env.development&lt;/code&gt; on your project root folder. and inside of it, add your API token in the following pattern:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-env&quot;&gt;CMS_API_TOKEN=YOUR_API_TOKEN_HERE
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After that, restart your development server. Go to your browser and click on &lt;code class=&quot;highlighter-rouge&quot;&gt;Visit our blog section&lt;/code&gt;. You should see your recently created article there. You can click on it and to directly to the article page. But what happened there? Lets take a look at the a file called &lt;code class=&quot;highlighter-rouge&quot;&gt;gatsby-node.js&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;axios&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;axios&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;marked&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;marked&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createPages&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createPage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}})&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;`https://api.storyblok.com/v1/cdn/stories`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;articles&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;axios&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; 
+    &lt;span class=&quot;na&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;CMS_API_TOKEN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;space.version&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getTime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// Create articles list page&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;createPage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;/articles&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;component&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;resolve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;./src/templates/all_articles.js&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;articles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;articles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stories&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// create each individual article page&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;articles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stories&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;article&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;createPage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;`/article/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;article&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;slug&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;component&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;resolve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;./src/templates/article.js&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; 
+        &lt;span class=&quot;na&quot;&gt;article&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;article&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;article&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// Don't do this at home :)&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// You need to sanitize this HTML first&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;long_text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;marked&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;article&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;long_text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This is a lifecycle script executed by Gatsby during build time. What this script does is:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;fetch all articles from Storyblok&lt;/li&gt;
+  &lt;li&gt;create an index page with all the articles so you have a complete list&lt;/li&gt;
+  &lt;li&gt;create individual pages with each article&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you look into &lt;code class=&quot;highlighter-rouge&quot;&gt;src/templates/all_article.js&lt;/code&gt; you will see:&lt;/p&gt;
+
+&lt;div class=&quot;language-jsx highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;React&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;react&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Link&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;gatsby&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Layout&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;../components/layout&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;AllArticles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;pageContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;articles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}})&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Layout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;className=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;article-list&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;articles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;article&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;key=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;article&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;uuid&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;to=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;`/article/${article.slug}`&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+              &lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;article&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Link&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+      &lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Layout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The &lt;strong&gt;AllArticles&lt;/strong&gt; component follows a pattern imposed by Gatsby. It must receive a prop called &lt;code class=&quot;highlighter-rouge&quot;&gt;pageContext&lt;/code&gt;. This necessary for Gatsby to inject the content at build-time and render the component to generate the static pages. If you follow the convention, you get all this magic for free.&lt;br /&gt;
+The same thing happens to the &lt;strong&gt;Article&lt;/strong&gt; component. it expects a &lt;code class=&quot;highlighter-rouge&quot;&gt;pageContext&lt;/code&gt; prop and from there on, you can create your React component in the same way.&lt;/p&gt;
+
+&lt;h2 id=&quot;next-steps&quot;&gt;Next Steps&lt;/h2&gt;
+
+&lt;p&gt;This example was very naive and simplistic, but you can already have a feeling of what Gatsby can do. If you are considering to develop a new website and don’t want to waste your time with tooling configuration, give Gatsby a try. It will be probably worth it.&lt;br /&gt;
+We are now evaluating if makes sense or not to build out Shop frontend with it in a way that supports multi-language. I got some interesting feedback from folks using Gatsby in production during my React Vienna talk that will definitely help to try it out.&lt;/p&gt;</content><author><name>Bruno Paulino</name></author><summary type="html">On February 17th, I gave a talk at the React Vienna Meetup about this topic and I thought writing a blogpost about could benefit some folks that either couldn’t make it or are living somewhere else around the globe. You can find my slides here. I would like to start off with a question. What if you want to put together a website with the most modern web tech out there? You probably need to know a bunch of things to start a simple website. Do you want to use modern Javascript syntax? no problem, just use Webpack and Babel to help you transpile your code. Do you want to put your website online? just configure an small box on Digital Ocean, add Nginx and your website is online. Do you want to write blogposts and publish them using a CMS? No problem, just implement your backend, maybe using Postgres as a database. This list goes on and on if you try to start with a modern tool chain. To get this whole setup done, and most importantly, correctly configured, can be hard. It is even worse if you are a beginner.</summary></entry><entry><title type="html">Automating your work with Github Actions</title><link href="https://bpaulino.com/entries/10-automating-your-work-with-github-actions" rel="alternate" type="text/html" title="Automating your work with Github Actions" /><published>2019-09-06T00:00:00+00:00</published><updated>2019-09-06T00:00:00+00:00</updated><id>https://bpaulino.com/entries/automating-your-work-with-github-actions</id><content type="html" xml:base="https://bpaulino.com/entries/10-automating-your-work-with-github-actions">&lt;p&gt;I have finally joined the &lt;a href=&quot;https://github.com/features/actions&quot;&gt;Github Actions&lt;/a&gt; beta program this week and figured why not play with it for a bit and see what I can do. So my first idea was to automate the deployment process of my blog, this one you are currently reading. I am currently using &lt;a href=&quot;https://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt; as my static site generator. It works flawless for what I need. I just write whatever I want using &lt;a href=&quot;https://daringfireball.net/projects/markdown/&quot;&gt;Markdown&lt;/a&gt; and Jekyll digests everything inside my source folder and spits out HTML, CSS and JS files in a &lt;strong&gt;“ready-to-publish”&lt;/strong&gt; folder where I can just upload to the cloud.&lt;/p&gt;
+
+&lt;p&gt;I am currently using &lt;a href=&quot;https://pages.github.com/&quot;&gt;Github Pages&lt;/a&gt; to host my blog and it has been working perfectly fine for the past couple years.&lt;/p&gt;
+
+&lt;h2 id=&quot;but-how-does-a-github-action-work-anyway&quot;&gt;But how does a Github Action work anyway?&lt;/h2&gt;
+&lt;p&gt;Github Actions is a way to perform tasks automatically for you. To give you an example, I will use my blog workflow.&lt;br /&gt;
+It all starts when I want to write a new post. I just create a new markdown file, write down whatever is on my head and save it. After this whole process, I need a way to transform my text in a website. Jekyll is doing the heavy-lifting for me, so I just go to my terminal and type:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# This command will generate my entire website and all its dependencies&lt;/span&gt;
+jekyll build
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After generating all the necessary files, I need to upload it somewhere. In this case, I just have to commit my changes to a specific branch called &lt;strong&gt;gh-pages&lt;/strong&gt; and Github will serve my site on the web. For doing that, I usually perform the following commands in a bash script:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# This is the folder Jekyll generates with my website. Lets just open it&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;_site
+&lt;span class=&quot;c&quot;&gt;# Now we need a new git repository here, &lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# so I can commit only the generated files and skip the source files&lt;/span&gt;
+git init
+git config user.name &lt;span class=&quot;s2&quot;&gt;&quot;Bruno Paulino&quot;&lt;/span&gt;
+git config user.email &lt;span class=&quot;s2&quot;&gt;&quot;bruno@bpaulino.com&quot;&lt;/span&gt;
+git add &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# That will create a nice commit message with something like: &lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# New Build - Fri Sep 6 12:32:22 UTC 2019&lt;/span&gt;
+git commit &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;New Build - &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Now lets push my commit to the gh-pages branch and replace everything there&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;REPO&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;https://brunojppb@github.com/brunojppb.github.io.git
+git push &lt;span class=&quot;nt&quot;&gt;--force&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$REPO&lt;/span&gt; master:gh-pages
+&lt;span class=&quot;c&quot;&gt;# Lets do some cleanup here since we don't need the generated files anymore&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-fr&lt;/span&gt; .git
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ..
+&lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rf&lt;/span&gt; _site
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;That is pretty simple right? It is indeed, but how cool would that be if Github could do that for me instead? That is where Github Actions come to give us a hand.&lt;/p&gt;
+
+&lt;p&gt;It all starts with a folder on your repository called &lt;code class=&quot;highlighter-rouge&quot;&gt;.github/workflows&lt;/code&gt;.&lt;br /&gt;
+inside of this folder, create a file called &lt;code class=&quot;highlighter-rouge&quot;&gt;deploy-workflow.yml&lt;/code&gt; with the content below. Each line will be explained with a comment:&lt;/p&gt;
+
+&lt;h3 id=&quot;deploy-workflowyml&quot;&gt;deploy-workflow.yml&lt;/h3&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# This is the name of our workflow.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# Github will show it on its Website UI&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;deploy&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# This configures our workflow to be triggered&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# only when we push to the master branch&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;branches&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;master&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Here is where we define our jobs. &lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# Which means the tasks we want Github to execute&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;jobs&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;deploy&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# Here we specify in whith OS we want it to run&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;runs-on&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ubuntu-18.04&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# Now we define which actions will take place.&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# One after another&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;steps&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# This is the first action. It will make sure that we have&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# all the necessary files from our repo, including our custom actions&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# This action here is actually from a remote repo available from Githup itself&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;actions/checkout@v1&lt;/span&gt; 
+      &lt;span class=&quot;c1&quot;&gt;# This is our custom action. Here is where we will define our git commands&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# to push our website updates to the `gh-pages` branch.&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# Notice that we are specifying the path to the action here.&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# We will create those files in a sec&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;./.github/actions/build-dist-site&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;c1&quot;&gt;# Now make sure you add this environment variable.&lt;/span&gt;
+          &lt;span class=&quot;c1&quot;&gt;# This token will allow us to push to github directly&lt;/span&gt;
+          &lt;span class=&quot;c1&quot;&gt;# without having to type in our password.&lt;/span&gt;
+          &lt;span class=&quot;c1&quot;&gt;# The GITHUB_TOKEN is available by default&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;GITHUB_TOKEN&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;${{ secrets.GITHUB_TOKEN }}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now lets create our custom action. &lt;a href=&quot;https://help.github.com/en/articles/about-actions#types-of-github-actions&quot;&gt;Github Actions are divided in 2 types&lt;/a&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Docker container&lt;/li&gt;
+  &lt;li&gt;Javascript&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We are running our action using a Docker Container. Using Docker, we make sure the environment where our scripts are running will be the same, no matter what happens to the Github environment. So, lets dig deeper and create our &lt;code class=&quot;highlighter-rouge&quot;&gt;actions&lt;/code&gt; folder under &lt;code class=&quot;highlighter-rouge&quot;&gt;.github&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# build-dist-site will be the folder for holding&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# our action configuration (Dockerfile, scripts and Metadata)&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; .github/actions/build-dist-site
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Under &lt;code class=&quot;highlighter-rouge&quot;&gt;.github/actions/build-dist-site&lt;/code&gt; lets create 3 files:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;action.yml&lt;/code&gt;: It will hold the metadata of our action&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile:&lt;/code&gt; Will specify our Docker image to run Jekyll in a container&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;entrypoint.sh:&lt;/code&gt; Will have our custom scripts to generate and deploy our website update&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;dockerfile&quot;&gt;Dockerfile&lt;/h3&gt;
+
+&lt;div class=&quot;language-dockerfile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Our Docker image will be based on ruby:2-slim&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# it is a very light docker image.&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; ruby:2-slim&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;LABEL&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; author=&quot;Bruno Paulino&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;LABEL&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; version=&quot;1.0.0&quot;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Lets install all dependencies&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# including git and Bundler 2.0.2&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; BUNDLER_VERSION 2.0.2&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;apt-get update &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;    apt-get &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--no-install-recommends&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;        bats &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;        build-essential &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;        ca-certificates &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;        curl &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;        libffi6 &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;        make &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;        shellcheck &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;        libffi6 &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;        git-all &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; gem &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;bundler:2.0.2 &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; bundle config &lt;span class=&quot;nt&quot;&gt;--global&lt;/span&gt; silence_root_warning 1
+
+&lt;span class=&quot;c&quot;&gt;# This is our entrypoint to our custom scripts&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# more about that in a sec&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;COPY&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; entrypoint.sh /&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Use the entrypoint.sh file as the container entrypoint&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# when Github executes our Docker container&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;ENTRYPOINT&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; [&quot;sh&quot;, &quot;/entrypoint.sh&quot;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now that we have our Dockerfile ready, we need to tell Github to use it. That is why we need the &lt;code class=&quot;highlighter-rouge&quot;&gt;action.yml&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;h3 id=&quot;actionyml&quot;&gt;action.yml&lt;/h3&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Ok, here the keys are pretty much self explanatory :)&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Deploy&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;version'&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Setup&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Ruby&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;and&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;version'&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Bruno&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Paulino'&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;runs&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;using&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;docker'&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Dockerfile'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;action.yml&lt;/code&gt; file tells Github what to do. In this case, just tell it to use Docker and use our &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; to build the container with it.&lt;/p&gt;
+
+&lt;p&gt;Now we just need our &lt;code class=&quot;highlighter-rouge&quot;&gt;entrypoint.sh&lt;/code&gt; script to execute our website generation and deployment. Lets get our hands dirty with a bit of bash script:&lt;/p&gt;
+
+&lt;h3 id=&quot;entrypointsh&quot;&gt;entrypoint.sh&lt;/h3&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Exit immediately if a pipeline returns a non-zero status.&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;🚀 Starting deployment action&quot;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Here we are using the variables&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# - GITHUB_ACTOR: It is already made available for us by Github. It is the username of whom triggered the action&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# - GITHUB_TOKEN: That one was intentionally injected by us in our workflow file.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Creating the repository URL in this way will allow us to `git push` without providing a password&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# All thanks to the GITHUB_TOKEN that will grant us access to the repository&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;REMOTE_REPO&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;GITHUB_ACTOR&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;GITHUB_TOKEN&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;@github.com/&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;GITHUB_REPOSITORY&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.git&quot;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# We need to clone the repo here.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Remember, our Docker container is practically pristine at this point&lt;/span&gt;
+git clone &lt;span class=&quot;nv&quot;&gt;$REMOTE_REPO&lt;/span&gt; repo
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;repo
+
+&lt;span class=&quot;c&quot;&gt;# Install all of our dependencies inside the container&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# based on the git repository Gemfile&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;⚡️ Installing project dependencies...&quot;&lt;/span&gt;
+bundle &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Build the website using Jekyll&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;🏋️ Building website...&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;JEKYLL_ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;production bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;jekyll build
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Jekyll build done&quot;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Now lets go to the generated folder by Jekyll&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# and perform everything else from there&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;_site
+
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;☁️ Publishing website&quot;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# We don't need the README.md file on this branch&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; README.md
+
+&lt;span class=&quot;c&quot;&gt;# Now we init a new git repository inside _site&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# So we can perform a commit&lt;/span&gt;
+git init
+git config user.name &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;GITHUB_ACTOR&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+git config user.email &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;GITHUB_ACTOR&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;@users.noreply.github.com&quot;&lt;/span&gt;
+git add &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# That will create a nice commit message with something like: &lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Github Actions - Fri Sep 6 12:32:22 UTC 2019&lt;/span&gt;
+git commit &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Github Actions - &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Build branch ready to go. Pushing to Github...&quot;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Force push this update to our gh-pages&lt;/span&gt;
+git push &lt;span class=&quot;nt&quot;&gt;--force&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$REMOTE_REPO&lt;/span&gt; master:gh-pages
+&lt;span class=&quot;c&quot;&gt;# Now everything is ready.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Lets just be a good citizen and clean-up after ourselves&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-fr&lt;/span&gt; .git
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ..
+&lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rf&lt;/span&gt; repo
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;🎉 New version deployed 🎊&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;🤯 That was a lot different from what I started with right? Ok, the reason for that is just Docker. Now we have a more robust implementation of our deployment pipeline where we could even move away from Github to Gitlab and reuse the Dockerfile and entrypoint.sh (with minor changes).&lt;/p&gt;
+
+&lt;p&gt;Now that we are armed with those files, lets commit our changes and push to Github and see what happens. Going to our Github repository page, there you can see a new button called &lt;strong&gt;Actions&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/github_actions_button.jpg&quot; alt=&quot;Github Actions button&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Lets click on it. You will be taken to the &lt;strong&gt;Workflows&lt;/strong&gt; list. There we see our &lt;strong&gt;Deploy&lt;/strong&gt; workflow we just created.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/github_workflows_running.jpg&quot; alt=&quot;Github Actions button&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now inside of our workflow execution context, we can see all of our actions being executed:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/github_execution_pipeline.jpg&quot; alt=&quot;Github Actions button&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Ok, now our automation work was fully done. As a cherry on top, you can also add a badge to your README.md file showing the current status of your custom actions like that:&lt;/p&gt;
+
+&lt;div class=&quot;language-md highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gh&quot;&gt;# Where /deploy/ must be replaced with your workflow name&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;![&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;workflow-badge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;](&lt;/span&gt;&lt;span class=&quot;sx&quot;&gt;https://github.com/brunojppb/brunojppb.github.io/workflows/deploy/badge.svg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;That will render a nice image by Github on your repository page with the current action status.
+&lt;img src=&quot;/assets/images/github_action_badge.jpg&quot; alt=&quot;Github Actions Badge&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now I can enjoy my time spent building and deploying my website doing something else like playing video games 🎮 or drawing 🎨. Here is the &lt;a href=&quot;https://github.com/brunojppb/brunojppb.github.io&quot;&gt;open-source repository of my blog if you want to take a look.&lt;/a&gt;&lt;/p&gt;</content><author><name>Bruno Paulino</name></author><summary type="html">I have finally joined the Github Actions beta program this week and figured why not play with it for a bit and see what I can do. So my first idea was to automate the deployment process of my blog, this one you are currently reading. I am currently using Jekyll as my static site generator. It works flawless for what I need. I just write whatever I want using Markdown and Jekyll digests everything inside my source folder and spits out HTML, CSS and JS files in a “ready-to-publish” folder where I can just upload to the cloud. I am currently using Github Pages to host my blog and it has been working perfectly fine for the past couple years.</summary></entry><entry><title type="html">Takeaways on The Mythical Man-Month book</title><link href="https://bpaulino.com/entries/9-mythical-man-month" rel="alternate" type="text/html" title="Takeaways on The Mythical Man-Month book" /><published>2019-04-23T00:00:00+00:00</published><updated>2019-04-23T00:00:00+00:00</updated><id>https://bpaulino.com/entries/takeaways-on-the-mythical-man-month</id><content type="html" xml:base="https://bpaulino.com/entries/9-mythical-man-month">&lt;p&gt;After finishing up reading the classic book &lt;strong&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/The_Mythical_Man-Month&quot;&gt;The Mythical Man-Month&lt;/a&gt;&lt;/strong&gt; from Frederick Brooks, it was astonishing to realize that most of his ideas are still sharp today in the field of software engineering. Apart from very few topics that somehow changed nowadays, I would like to point out my three favorites topics from his essays that are still relevant today and I personally have experienced in my career.&lt;/p&gt;
+
+&lt;h2 id=&quot;adding-manpower-to-a-late-project-makes-it-later&quot;&gt;Adding manpower to a late project makes it later&lt;/h2&gt;
+
+&lt;p&gt;Brooks argues that it is generally a bad idea to add more people to a project that is already late. He has some convincing arguments:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Whenever a new member joins the team, we need to share the existing knowledge, otherwise this person cannot contribute. It has a side effect that must be carefully considered: The once active and productive developer, has to stop her development tasks to take a training role, delaying the project even more.&lt;/li&gt;
+  &lt;li&gt;Whenever the team grows, the communication overhead also increases, meaning that new channels of communication will be created and the team will have to keep up.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;good-cooking-takes-time&quot;&gt;Good cooking takes time&lt;/h2&gt;
+
+&lt;p&gt;During some development tasks, we usually know that we can never rush it, specially when building what is meant to be foundation of a program. On the other hand, a business has to ship new features as fast as possible, causing the task rush inevitable in most cases.&lt;/p&gt;
+
+&lt;p&gt;Brooks makes a good analogy with cooking. He suggests that if you want to have proper meal with nice taste, good appearance and nicely done, you have to give the necessary time for the chef to prepare. Otherwise you will end up with some disastrous food, burned in one side and raw in the other. That analogy fits really well for certain software development tasks. We must understand what is critical to the system, putting more thought on its design and implementation. Rushing its completion can cause a lot of issues in the long-term of the project.&lt;/p&gt;
+
+&lt;h2 id=&quot;small-sharp-teams&quot;&gt;Small Sharp Teams&lt;/h2&gt;
+
+&lt;p&gt;Brooks really nails it down with this analogy. He uses a surgical team of doctors to point out how a small and multidisciplinary team makes progress more effectively.&lt;/p&gt;
+
+&lt;p&gt;I personally have experienced that. Once working on an iOS app, I had by my side a backend developer and a UI Designer. We three sat down and decided how the screens would look like, how the data structure would be shaped and how the API between the app and backend should look. This approach was unbelievable effective. In sprints of two weeks we always had a new app release including new features and bug fix.&lt;/p&gt;
+
+&lt;h2 id=&quot;it-all-comes-down-to-communication&quot;&gt;It all comes down to communication&lt;/h2&gt;
+
+&lt;p&gt;There are many other great arguments in the book where Brooks talks extensively, but at the end of the reading what is clear is that communication is the key for a project success. You might have the 10x rockstar developer, but if they cannot communicate well with your team, the project is likely to fail.&lt;/p&gt;
+
+&lt;p&gt;This book has survived the toughest of all challenges: &lt;strong&gt;Time&lt;/strong&gt;. It was originally published in 1975 and at the time of this writing it is still rock solid. This is a must-read for anyone interested in software engineering and project success.&lt;/p&gt;</content><author><name>Bruno Paulino</name></author><summary type="html">After finishing up reading the classic book The Mythical Man-Month from Frederick Brooks, it was astonishing to realize that most of his ideas are still sharp today in the field of software engineering. Apart from very few topics that somehow changed nowadays, I would like to point out my three favorites topics from his essays that are still relevant today and I personally have experienced in my career.</summary></entry><entry><title type="html">Why Austrian visa applications have to suck?</title><link href="https://bpaulino.com/entries/8-why-work-visa-applications-have-to-suck" rel="alternate" type="text/html" title="Why Austrian visa applications have to suck?" /><published>2018-09-18T00:00:00+00:00</published><updated>2018-09-18T00:00:00+00:00</updated><id>https://bpaulino.com/entries/why-work-visa-applications-have-to-suck</id><content type="html" xml:base="https://bpaulino.com/entries/8-why-work-visa-applications-have-to-suck">&lt;p&gt;In Austria, there are many kinds of visas, but the most common for work in the IT field is called &lt;strong&gt;rot-weiß-rot-karte&lt;/strong&gt; (red-white-red card) and there are a few categories which that one can pick. Mine was &lt;a href=&quot;https://www.migration.gv.at/en/types-of-immigration/permanent-immigration/other-key-workers/&quot;&gt;&lt;strong&gt;Other key workers&lt;/strong&gt;&lt;/a&gt;. This category can be used when a company cannot find a qualified person in the local labor market. That is fairly common in the IT market around the world, where usually there are more jobs available than skilled people around.&lt;/p&gt;
+
+&lt;p&gt;I am originally from Brazil, but currently living in Vienna, Austria. in 2016, my wife and I decided to move abroad to have a different experience. It has been an amazing journey so far and we don’t regret of doing that.&lt;/p&gt;
+
+&lt;p&gt;Back in 2016, I got a job offer in Vienna and I decided to take it. The company applied for my visa and everything went well. After around 4 months waiting, where 2 months I was working remote from Brazil and 2 months after moving to Austria, I got the letter saying my visa was approved and I should go to the immigration office to grab my documents.&lt;/p&gt;
+
+&lt;p&gt;One year and a half has passed, the work was fine and the team was great. But as some of you may know, the mother tong here is German, and none of us spoke it when we decided to come. For developers, that is usually not an issue. Most of the companies here either have English as its main language or the entire team speak English fluently. But if you are working on a different field, like my wife, it is quite tough to fit in the labor market.&lt;/p&gt;
+
+&lt;p&gt;As the solo earner at home, things were starting to get a bit tricky. We could afford only one of us to take German classes and my wife was obviously the one that should take it. After almost 2 years, she can speak quite a lot already, but she is still trying to find a job that is willing to take a B2 German level speaker like her.&lt;/p&gt;
+
+&lt;p&gt;Around April 2018, I have got a job offer from an awesome company also here in Vienna where the income difference was considerable. It would make things a bit smoother as they also offered to pay German lessons for me. That was a big deal. Even though I really enjoyed my former job, I couldn’t turn down an opportunity like that. But as an immigrant, there was a catch: I could only work for the company that have applied for my first visa, which means if I left my job, I would no longer have a work visa and I should move back to my country.&lt;/p&gt;
+
+&lt;p&gt;According to the Austrian immigration office, I should apply again for a new visa with the new company, but theoretically as I was a Red-White-Red card holder already, I wouldn’t have to go through all the technical steps again (Diploma validation, English or German skills validation, etc…). I decided to take the risk and accepted the job.&lt;/p&gt;
+
+&lt;p&gt;After that decision, some unexpected things happened. I am writing this so if you are in a similar situation or considering to move abroad, you might want to think twice about what could happen, specially if you have a family to provide for.&lt;/p&gt;
+
+&lt;p&gt;It took 5 freaking months to receive the final decision. I was unemployed for this whole period, even though I had a job offer, an working visa, was living in the country for almost 2 years and the company had a letter from the AMS (Austrian labor office) stating they couldn’t find any professional available in the local market. What would have happened if I didn’t have any savings? I cannot even imagine.&lt;/p&gt;
+
+&lt;p&gt;Some things you should consider before deciding to move:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;You cannot work for the new company until the visa is ready. Actually, if you are in the country already, you cannot work at all until you have the visa;&lt;/li&gt;
+  &lt;li&gt;If you don’t have a tourist visa, you are fucked. As a Brazilian, I am lucky enough to have a tourist period of 3 months to stay without having to apply for it. And also as I applied for the new visa before the former company deregistered me, I could stay and wait for the new visa even after the 3 months period expired. Depending on your passport, you might have to leave the country immediately.&lt;/li&gt;
+  &lt;li&gt;As soon as I left my former job, I was deregistered from my health insurance. Although I wanted to keep paying for it, they didn’t allow me. Long story short, my wife and I were left alone without insurance. We had to use travel insurance during this period.&lt;/li&gt;
+  &lt;li&gt;Although I already provided them proof of my skills on my first visa application, they required me to prove everything again. I had to take the TOEFL test and prove once again that I had a professional level of English.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;From the economic standpoint, the state just wasted 5 months of my tax contributions where I could have been paying happily (taxes are quite high in Austria compared to Brazil). The state could also have lost a good contributor, since I could have changed my mind, decided not to continue with the visa application and move back to my country.&lt;/p&gt;
+
+&lt;p&gt;I got my new visa 2 weeks ago and I don’t regret accepting the new job, but I don’t think I would do the visa application again. If I have to go through this whole visa process once more, I would rather move back to my country and work remote.&lt;/p&gt;
+
+&lt;p&gt;Of course I am talking about my experience in Austria. For other countries it will must probably be different. What I think is important to consider is the potential of attracting skilled workers (which means, good tax payers) that some countries are just ignoring and with remote work on the rise, people don’t even have to think about this whole visa trouble.
+At the end, everyone loses.&lt;/p&gt;</content><author><name>Bruno Paulino</name></author><summary type="html">In Austria, there are many kinds of visas, but the most common for work in the IT field is called rot-weiß-rot-karte (red-white-red card) and there are a few categories which that one can pick. Mine was Other key workers. This category can be used when a company cannot find a qualified person in the local labor market. That is fairly common in the IT market around the world, where usually there are more jobs available than skilled people around.</summary></entry><entry><title type="html">Scala 101: Funções</title><link href="https://bpaulino.com/entries/7-scala-101-funcoes" rel="alternate" type="text/html" title="Scala 101: Funções" /><published>2017-07-27T00:00:00+00:00</published><updated>2017-07-27T00:00:00+00:00</updated><id>https://bpaulino.com/entries/scala-101-funcoes</id><content type="html" xml:base="https://bpaulino.com/entries/7-scala-101-funcoes">&lt;p&gt;Continuando meus estudos em Scala, temos que falar de um conceito muito importante da linguagem: Funções. Em Scala, funções são tratados como valores normais como Int e String, ou seja, podemos declarar funções, armazená-las em variáveis e até passá-las como parâmetro para outras funções. Aqui utilizarei os exemplos do lívro Scala in Action, mostrando como utilizar funções, desde o básico até casos mais avançados.
+Abaixo temos o exemplo clássico de como utilizar funções:&lt;/p&gt;
+&lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;UseResource&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Resource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Boolean&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;A função &lt;strong&gt;&lt;em&gt;use&lt;/em&gt;&lt;/strong&gt; definida a cima é chamada de método, pois é definida dentro da classe &lt;strong&gt;&lt;em&gt;UseResource&lt;/em&gt;&lt;/strong&gt; e pode causar efeitos colaterais no estado do objeto. Essa é uma das desvantagens de utilizar métodos ao invés de funções puras. Vejamos um próximo exemplo:&lt;/p&gt;
+&lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;addOne&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;addOne&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// output: 3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;A grande diferença entre os exemplos citados a cima é que a segunda não modifica estado, sendo considerada uma função pura.&lt;/p&gt;
+
+&lt;h2 id=&quot;higher-order-functions&quot;&gt;Higher-order functions&lt;/h2&gt;
+
+&lt;p&gt;São as funções que recebem funções como parâmetro e que podem retornar funções como retorno. Um exemplo disso é a função &lt;strong&gt;&lt;em&gt;filter&lt;/em&gt;&lt;/strong&gt; em listas. Ela recebe uma função literal e retorna uma lista como os elementos que passaram pelo “filtro”.&lt;/p&gt;
+&lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// _ representa o o primeiro elemento da tupla passada pela função filter
+// output: List(2, 4, 6, 8, 10)
+&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// Também poderiamos escrever dessa forma:
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;element&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;element&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// ou dessa forma
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;filterFunc&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;el&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;el&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filterFunc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;problemas-da-vida-real&quot;&gt;Problemas da Vida Real&lt;/h2&gt;
+
+&lt;p&gt;Agora aplicando esses conceitos no dia-a-dia, é comum termos o cenário onde precisamos utilizar um &lt;strong&gt;**Resource&lt;/strong&gt;**, seja ele um arquivo ou um socket na rede. Sempre que finalizamos a utilização, precisamos fechar esse recurso, de forma que ele possa ser retomado pelo SO e que seja usado por outra aplicação. Se não fechamos o recurso, podemos der um caso de memory leak, onde teremos esse recurso na memória por tempo indeterminado e outros varios problemas. Geralmente temos o seguinte código ao utilizar um recurso:&lt;/p&gt;
+&lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getResource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nf&quot;&gt;doSomeCrazyStuff&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;finally&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nv&quot;&gt;resource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;dispose&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// Perceba que a utilização do catch é opicional em Scala. Veremos Error Handling em outro post
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Perceba que sempre que você precisar utilizar um recurso, você terá essa repetição de código para ter certeza que seu recurso seja utilizado corretamente. Porém e se esquecermos de adicionar o bloco try-finally? Para evitar repetição, podemos escrever uma função que receba um Resource e uma função como paramêtros e todo esse boilerplate será evitado:&lt;/p&gt;
+&lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;A&lt;/span&gt;, &lt;span class=&quot;kt&quot;&gt;B&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;&amp;lt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Resource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;](&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resource&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Resource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Resource&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;finally&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;resource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;dispose&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Agora podemos usar a função 'use' sem o bloco try-finally
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;resource&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getResource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;resourceToUse&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nf&quot;&gt;doSomeCrazyStuff&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resourceToUse&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// o recurso será fechado automaticamente.
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;currying&quot;&gt;Currying&lt;/h2&gt;
+
+&lt;p&gt;Currying é a técnica de transformar uma função que recebe vários parâmetros em outra função que recebe apenas um.
+Um bom exemplo da vida real onde podemos ver o benefício do currying é a injeção de dependência. Onde não nos preocupamos em como o objeto foi criado, apenas nos preocupamos em utilizar a instância já provida pelo injetor.&lt;/p&gt;
+&lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;k&quot;&gt;trait&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TaxService&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;taxIt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;productPrice&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Double&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Double&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;IOFTaxService&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TaxService&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// retorna 10% do valor do produto
+&lt;/span&gt;  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;taxIt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;productPrice&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Double&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Double&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;productPrice&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// taxIt recebe um TaxService o preço de produto.
+// Retorna o valor aplicado pelo TaxService injetado.
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;taxIt&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;TaxService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Double&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Double&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;taxService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;taxService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;taxIt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// utilizando .curried, podemos injetar uma instancia do IOFTaxService.
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;taxService&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;taxIt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;curried&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;IOFTaxService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Agora podemos apenas utilizar a função taxIt sem se preocupar qual o tipo de serviço
+// de aplicação de imposto que está sendo utilizado.
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;taxToPay&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;taxService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// output: Double = 10.0
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Bruno Paulino</name></author><summary type="html">Continuando meus estudos em Scala, temos que falar de um conceito muito importante da linguagem: Funções. Em Scala, funções são tratados como valores normais como Int e String, ou seja, podemos declarar funções, armazená-las em variáveis e até passá-las como parâmetro para outras funções. Aqui utilizarei os exemplos do lívro Scala in Action, mostrando como utilizar funções, desde o básico até casos mais avançados. Abaixo temos o exemplo clássico de como utilizar funções: class UseResource { def use(r: Resource): Boolean = { ... } } A função use definida a cima é chamada de método, pois é definida dentro da classe UseResource e pode causar efeitos colaterais no estado do objeto. Essa é uma das desvantagens de utilizar métodos ao invés de funções puras. Vejamos um próximo exemplo: val addOne = (x: Int) =&amp;gt; x + 1 addOne(2) // output: 3 A grande diferença entre os exemplos citados a cima é que a segunda não modifica estado, sendo considerada uma função pura.</summary></entry></feed>
